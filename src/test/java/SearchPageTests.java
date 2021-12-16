@@ -77,6 +77,18 @@ public class SearchPageTests {
         }
     }
 
+    @DisplayName("Показать товары со скидкой")
+    @Test
+    public void onSaleTest(){
+        List<WebElement> searchResults = searchPage.OnSale();
+
+        for (WebElement element :
+                searchResults) {
+            assertTrue(element.getText().toLowerCase().contains("распродажа"),
+                    "\nПоказаны товары без скидки");
+        }
+    }
+
     @AfterEach
     public void CloseDriver(){
         webDriver.close();

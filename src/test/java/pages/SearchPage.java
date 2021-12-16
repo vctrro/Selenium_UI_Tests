@@ -20,10 +20,11 @@ public class SearchPage {
     private final By priceFromInput = By.xpath("//input[@aria-label='от']");
     private final By priceToInput = By.xpath("//input[@aria-label='до']");
     private final By inStockCheckBox = By.id("checkbox-in_stock");
+    private final By onSaleCheckBox = By.id("checkbox-on_sale");
 
     private final By markerForSearch = By.className("grid-product__title-inner");
     private final By markerForPrice = By.xpath("//div[@class='grid-product__price-value ec-price-item']");
-    private final By markerForStock = By.className("grid-product__image-wrap");
+    private final By markerForStockAndSale = By.className("grid-product__image-wrap");
 
     public SearchPage(WebDriver driver){
         webDriver = driver;
@@ -67,6 +68,18 @@ public class SearchPage {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return webDriverWait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(markerForStock));
+        return webDriverWait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(markerForStockAndSale));
+    }
+
+    public List<WebElement> OnSale(){
+        WebElement onSaleField = webDriverWait.until(ExpectedConditions.presenceOfElementLocated(onSaleCheckBox));
+        onSaleField.click();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return webDriverWait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(markerForStockAndSale));
     }
 }
