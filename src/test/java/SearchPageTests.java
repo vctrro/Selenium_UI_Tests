@@ -1,7 +1,4 @@
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -65,6 +62,18 @@ public class SearchPageTests {
             float price = Float.parseFloat(element.getText().substring(1));
             assertFalse(price > to || price < from,
                     String.format("\nЦена \"%f\" не соответствует диапазону \"%d\" - \"%d\"", price, from, to));
+        }
+    }
+
+    @DisplayName("Показать товары в наличии")
+    @Test
+    public void InStockTest(){
+        List<WebElement> searchResults = searchPage.InStock();
+
+        for (WebElement element :
+                searchResults) {
+            assertFalse(element.getText().toLowerCase().contains("распродано"),
+                    "\nНе все показанные товары есть в наличии");
         }
     }
 
