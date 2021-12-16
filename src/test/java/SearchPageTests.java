@@ -3,6 +3,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,11 +12,12 @@ import pages.SearchPage;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SearchPageTests {
     private static final String chromeWebDriver = "src/webDriver/chromedriver";
-    private static final String siteURL = "https://buy-in-10-seconds.company.site/";
+    private static final String siteURL = "https://buy-in-10-seconds.company.site";
 
     WebDriver webDriver;
     SearchPage searchPage;
@@ -45,6 +47,24 @@ public class SearchPageTests {
             String productName = element.getText().toLowerCase();
             assertTrue(productName.contains(keyword),
                     String.format("\n\"%s\" не содержит \"%s\"", productName, keyword));
+        }
+    }
+
+    @DisplayName("Поиск по диапазону цен:")
+    @ParameterizedTest(name = "от {0} до {1}")
+    @CsvSource({
+            "0, 1",
+            "1, 5",
+            "2, 4"
+    })
+    public void PriceRangeTest(int from, int to){
+        List<WebElement> searchResult = searchPage.PriceRange(from, to);
+
+        for (WebElement element :
+                searchResult) {
+            float price = Float.parseFloat(element.getText().substring(1));
+            assertFalse(price > to || price < from,
+                    String.format("\nЦена \"%f\" не соответствует диапазону \"%d\" - \"%d\"", price, from, to));
         }
     }
 
